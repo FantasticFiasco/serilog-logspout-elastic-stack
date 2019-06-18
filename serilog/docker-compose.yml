@@ -4,6 +4,8 @@ services:
   serilog-example:
     build:
       context: .
+    environment: 
+      LOGSTASH_FIELDS: elk.category=log,elk.environment=staging,elk.application=elk_demos_serilog
     networks:
       - elastic-stack_elk
 

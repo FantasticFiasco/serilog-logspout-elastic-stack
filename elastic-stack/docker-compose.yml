@@ -12,6 +12,7 @@ services:
       - "9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      LOGSPOUT: ignore
     networks:
       - elk
 
@@ -26,6 +27,7 @@ services:
       - "31311:31311"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+      LOGSPOUT: ignore
     networks:
       - elk
     depends_on:
@@ -38,12 +40,27 @@ services:
       - ./kibana/config/:/usr/share/kibana/config:ro
     ports:
       - "5601:5601"
+    environment: 
+      LOGSPOUT: ignore
     networks:
       - elk
     depends_on:
       - elasticsearch
 
+  logspout:
+    build:
+      context: extensions/logspout
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      ROUTE_URIS: logstash://logstash:5000
+      LOGSTASH_TAGS: docker-elk
+    networks:
+      - elk
+    depends_on:
+      - logstash
+    restart: on-failure
+
 networks:
 
   elk:
-    driver: bridge
