@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading;
-using Bogus;
 using Serilog;
-using Serilog.Sinks.Http.BatchFormatters;
+using Serilog.Formatting.Elasticsearch;
 using SerilogExample.Generators;
 
 namespace SerilogExample
@@ -11,14 +10,15 @@ namespace SerilogExample
     {
         static void Main()
         {
-            // TODO: Refactor 
-            // ILogger logger = new LoggerConfiguration()
-            //     .WriteTo.DurableHttpUsingFileSizeRolledBuffers(
-            //         requestUri: "http://logstash:31311",
-            //         batchFormatter: new ArrayBatchFormatter())
-            //     .WriteTo.Console()
-            //     .CreateLogger()
-            //     .ForContext<Program>();
+            // note: use of ElasticsearchJsonFormatter is optional (but recommended as it produces 'idiomatic' json)
+            // If you don't want to take a dependency on 'Serilog.Formatting.Elasticsearch' package
+            // you can also other json formatters such as Serilog.Formatting.Json.JsonFormatter
+
+            // Console sink send logs to stdout which will then be read by logspout
+            ILogger logger = new LoggerConfiguration()
+                .WriteTo.Console(new ElasticsearchJsonFormatter())
+                .CreateLogger()
+                .ForContext<Program>();
 
             var customerGenerator = new CustomerGenerator();
             var orderGenerator = new OrderGenerator();
@@ -27,9 +27,9 @@ namespace SerilogExample
             {
                 var customer = customerGenerator.Generate();
                 var order = orderGenerator.Generate();
-                
+
                 logger.Information("{@customer} placed {@order}", customer, order);
-                
+
                 Thread.Sleep(1000);
             }
         }
