@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Serilog;
+using Serilog.Exceptions;
 using Serilog.Formatting.Elasticsearch;
 using SerilogExample.Generators;
 
@@ -16,12 +17,14 @@ namespace SerilogExample
 
             // Console sink send logs to stdout which will then be read by logspout
             ILogger logger = new LoggerConfiguration()
+                .Enrich.WithExceptionDetails()
                 .WriteTo.Console(new ElasticsearchJsonFormatter())
                 .CreateLogger()
                 .ForContext<Program>();
 
             var customerGenerator = new CustomerGenerator();
             var orderGenerator = new OrderGenerator();
+            var exGenerator = new ExceptionGenerator();
 
             while (true)
             {
@@ -29,6 +32,11 @@ namespace SerilogExample
                 var order = orderGenerator.Generate();
 
                 logger.Information("{@customer} placed {@order}", customer, order);
+
+                var ex = exGenerator.Generate();
+                if (ex != null) {
+                    logger.Error(ex, "problem with {@order} placed by {@customer}", order, customer);
+                }
 
                 Thread.Sleep(1000);
             }
