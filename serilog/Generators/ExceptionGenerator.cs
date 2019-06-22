@@ -22,8 +22,6 @@ namespace SerilogExample.Generators
             return blowUp ? GenerateRealException() : null;
         }
 
-
-
         [MethodImpl(MethodImplOptions.NoInlining)]
         private Exception GenerateRealException()
         {
@@ -31,10 +29,11 @@ namespace SerilogExample.Generators
             {
                 ThrowException();
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 return ex;
             }
+            
             return null;
         }
 
