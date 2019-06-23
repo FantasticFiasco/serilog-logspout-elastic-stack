@@ -13,7 +13,7 @@
 
 ## Introduction
 
-[Elastic Stack](https://www.elastic.co/products) is fantastic at collecting and visualizing log events. [Serilog](https://serilog.net/) is fantastic at producing structured log events. This repository provides a sandbox where developers can explore the life of a log event starting with its birth in Serilog, its transport over the network to Logstash, its fields being indexed by Elasticsearch and finally its legacy being recorded as a historical event in Kibana.
+[Elastic Stack](https://www.elastic.co/products) is fantastic at collecting and visualizing log events. [Serilog](https://serilog.net/) is fantastic at producing structured log events. This repository provides a sandbox where developers can explore the life of a log event starting with its birth in Serilog, its transport over the network to Logstash using [Logspout](https://github.com/gliderlabs/logspout), its fields being indexed by Elasticsearch and finally its legacy being recorded as a historical event in Kibana.
 
 ## What you will end up with
 
